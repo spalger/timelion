@@ -2,6 +2,14 @@
 var path = require('path');
 
 module.exports = function (kibana) {
+  
+  var mainFile = 'plugins/timelion/app';
+  if (Object.getOwnPropertyDescriptor(kibana, 'autoload').get) {
+    // the autoload list has been replaced with a getter that complains about
+    // improper access, bypass that getter by seeing if it is defined
+    mainFile = 'plugins/timelion/app-with-autoload';
+  }
+  
   return new kibana.Plugin({
     require: ['kibana', 'elasticsearch'],
     uiExports: {
