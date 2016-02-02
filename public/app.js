@@ -46,13 +46,15 @@ require('ui/routes')
   });
 
 app.controller('timelion', function (
-  $scope, $http, timefilter, AppState, courier, $route, $routeParams, kbnUrl, Notifier, config, $timeout, Private) {
+  $scope, timefilter, AppState, courier, $route, $routeParams, kbnUrl, Notifier, config, $timeout, Private) {
   timefilter.enabled = true;
   var notify = new Notifier({
     location: 'Timelion'
   });
 
   var timezone = Private(require('plugins/timelion/services/timezone'))();
+  var api = Private(require('plugins/timelion/services/api'));
+
   var defaultExpression = '.es(*)';
   var savedSheet = $route.current.locals.savedSheet;
   var blankSheet = [defaultExpression];
@@ -151,7 +153,7 @@ app.controller('timelion', function (
     $scope.state.save();
     $scope.running = true;
 
-    $http.post('timelion/run', {
+    api.run({
       sheet: $scope.state.sheet,
       time: _.extend(timefilter.time, {
         interval: getInterval($scope.state),
